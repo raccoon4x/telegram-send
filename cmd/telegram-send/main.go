@@ -44,6 +44,10 @@ func main() {
 		return
 	}
 
+	if len(flag.Args()) > 0 {
+		message = strings.Join(flag.Args(), " ")
+	}
+
 	if stdin {
 		var sb strings.Builder
 		io.Copy(&sb, os.Stdin)
