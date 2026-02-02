@@ -7,8 +7,9 @@ import (
 
 type Config struct {
 	Telegram struct {
-		Token  string
-		ChatID string
+		Token    string
+		ChatID   string
+		ThreadID int `mapstructure:"threadid"`
 	}
 }
 

@@ -38,6 +38,7 @@ func main() {
 
 	token := cfg.Telegram.Token
 	chatID := cfg.Telegram.ChatID
+	threadID := cfg.Telegram.ThreadID
 
 	if token == "" || chatID == "" {
 		fmt.Println("token and chatid are required in the config file")
@@ -55,15 +56,15 @@ func main() {
 	}
 
 	if message != "" {
-		if err := telegram.SendMessage(token, chatID, message); err != nil {
+		if err := telegram.SendMessage(token, chatID, message, threadID); err != nil {
 			fmt.Println("Error sending message:", err)
 		}
 	} else if file != "" {
-		if err := telegram.SendFile(token, chatID, file, caption, "Document"); err != nil {
+		if err := telegram.SendFile(token, chatID, file, caption, "Document", threadID); err != nil {
 			fmt.Println("Error sending file:", err)
 		}
 	} else if image != "" {
-		if err := telegram.SendFile(token, chatID, image, caption, "Photo"); err != nil {
+		if err := telegram.SendFile(token, chatID, image, caption, "Photo", threadID); err != nil {
 			fmt.Println("Error sending image:", err)
 		}
 	} else {

@@ -11,11 +11,14 @@ import (
 	"path/filepath"
 )
 
-func sendMessage(token, chatID, text string) error {
+func sendMessage(token, chatID, text string, threadID int) error {
 	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", token)
-	payload := map[string]string{
+	payload := map[string]interface{}{
 		"chat_id": chatID,
 		"text":    text,
+	}
+	if threadID > 0 {
+		payload["message_thread_id"] = threadID
 	}
 
 	data, err := json.Marshal(payload)
@@ -36,7 +39,7 @@ func sendMessage(token, chatID, text string) error {
 	return nil
 }
 
-func sendFile(token, chatID, filePath, caption string, fileType string) error {
+func sendFile(token, chatID, filePath, caption string, fileType string, threadID int) error {
 	var url string
 	switch fileType {
 	case "Document":
@@ -67,6 +70,9 @@ func sendFile(token, chatID, filePath, caption string, fileType string) error {
 		return err
 	}
 	w.WriteField("chat_id", chatID)
+	if threadID > 0 {
+		w.WriteField("message_thread_id", fmt.Sprintf("%d", threadID))
+	}
 	if caption != "" {
 		w.WriteField("caption", caption)
 	}
@@ -92,10 +98,10 @@ func sendFile(token, chatID, filePath, caption string, fileType string) error {
 	return nil
 }
 
-func SendMessage(token, chatID, text string) error {
-	return sendMessage(token, chatID, text)
+func SendMessage(token, chatID, text string, threadID int) error {
+	return sendMessage(token, chatID, text, threadID)
 }
 
-func SendFile(token, chatID, filePath, caption, fileType string) error {
-	return sendFile(token, chatID, filePath, caption, fileType)
+func SendFile(token, chatID, filePath, caption, fileType string, threadID int) error {
+	return sendFile(token, chatID, filePath, caption, fileType, threadID)
 }

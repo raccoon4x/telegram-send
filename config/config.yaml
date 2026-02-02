@@ -1,3 +1,4 @@
 telegram:
   token: ""
   chatid: ""
+  # threadid: 123  # Optional
