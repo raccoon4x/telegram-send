@@ -49,13 +49,21 @@ func main() {
 		message = strings.Join(flag.Args(), " ")
 	}
 
-	if stdin {
+	isPiped := false
+	if fi, err := os.Stdin.Stat(); err == nil {
+		isPiped = (fi.Mode() & os.ModeCharDevice) == 0
+	}
+
+	if message == "" && (stdin || isPiped) {
 		var sb strings.Builder
-		io.Copy(&sb, os.Stdin)
+		if _, err := io.Copy(&sb, os.Stdin); err != nil {
+			fmt.Println("Error reading stdin:", err)
+			return
+		}
 		message = sb.String()
 	}
 
-	if message != "" {
+	if strings.TrimSpace(message) != "" {
 		if err := telegram.SendMessage(token, chatID, message, threadID); err != nil {
 			fmt.Println("Error sending message:", err)
 		}
