@@ -2,3 +2,5 @@ telegram:
   token: ""
   chatid: ""
   # threadid: 123  # Optional
+  # api_url: "https://tg.example.com"  # Optional: Bot API mirror, defaults to https://api.telegram.org
+  # proxy: "socks5://user:pass@host:1080"  # Optional: http, https or socks5; defaults to HTTPS_PROXY/HTTP_PROXY

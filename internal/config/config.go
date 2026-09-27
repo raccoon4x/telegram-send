@@ -9,7 +9,9 @@ type Config struct {
 	Telegram struct {
 		Token    string
 		ChatID   string
-		ThreadID int `mapstructure:"threadid"`
+		ThreadID int    `mapstructure:"threadid"`
+		APIURL   string `mapstructure:"api_url"`
+		Proxy    string
 	}
 }
 
