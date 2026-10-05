@@ -1,0 +1,31 @@
+name: release
+
+# Runs when a version tag is pushed: git tag v1.9.1 && git push origin v1.9.1
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write  # needed to create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned exactly: the same Go version gives a byte-identical binary.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.5'
+
+      - run: go test ./...
+
+      # enotops downloads releases/latest/download/telegram-send, keep the name.
+      - run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags "-s -w" -o telegram-send ./cmd/telegram-send
+
+      - run: sha256sum telegram-send > telegram-send.sha256
+
+      - run: gh release create "$GITHUB_REF_NAME" telegram-send telegram-send.sha256 --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
